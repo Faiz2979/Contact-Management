@@ -29,7 +29,7 @@ describe('UserController', () => {
       await testService.deleteUser();
     });
 
-    it('should be rejected if request is invalid', async () => {
+    it(`should be rejected if request is invalid`, async () => {
       const response = await request(app.getHttpServer())
         .post('/api/user/')
         .send({ 
