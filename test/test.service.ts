@@ -23,7 +23,8 @@ export class TestService{
             data: {
                 username: 'test',
                 password: bcrypt.hashSync('test', 10),
-                name: 'test'
+                name: 'test',
+                token: 'test'
             }
         });
     }

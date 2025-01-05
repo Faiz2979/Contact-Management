@@ -1,4 +1,5 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { v4 as uuid } from 'uuid';
@@ -85,11 +86,11 @@ export class UserService {
         }
     }
 
-    async getUser(username: string): Promise<UserResponse> {
-        this.logger.info(`Getting user, ${username}`);
+    async getUser(User: User): Promise<UserResponse> {
+        this.logger.info(`Getting user, ${User.username}`);
         const user = await this.prismaService.user.findUnique({
             where: {
-                username
+            username: User.username
             }
         });
 
