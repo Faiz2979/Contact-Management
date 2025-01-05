@@ -10,5 +10,4 @@ export const Auth = createParamDecorator((data: unknown, context: ExecutionConte
     } else {
         throw new HttpException('Unauthorized', 401);
     }
-    return request.user;
 });
