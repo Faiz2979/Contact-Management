@@ -5,7 +5,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { v4 as uuid } from 'uuid';
 import { PrismaService } from '../common/prisma.servise';
 import { ValidationService } from '../common/validation.service';
-import { LoginUserRequest, RegisterUserRequest, UserResponse } from '../model/user.model';
+import { LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserResponse } from '../model/user.model';
 import { UserValidation } from './user.validation';
 
 @Injectable()
@@ -101,6 +101,37 @@ export class UserService {
         return {
             username: user.username,
             name: user.name
+        };
+    }
+
+    async updateUser(user: User, request: UpdateUserRequest): Promise<UserResponse> {
+        this.logger.debug(
+        `UserService.update( ${JSON.stringify(user)} , ${JSON.stringify(request)} )`,
+        );
+    
+        const updateRequest: UpdateUserRequest = this.validationService.validate(
+        UserValidation.UPDATE,
+        request,
+        );
+    
+        if (updateRequest.name) {
+        user.name = updateRequest.name;
+        }
+    
+        if (updateRequest.password) {
+        user.password = await bcrypt.hash(updateRequest.password, 10);
+        }
+    
+        const result = await this.prismaService.user.update({
+        where: {
+            username: user.username,
+        },
+        data: user,
+        });
+        
+        return {
+        name: result.name,
+        username: result.username,
         };
     }
 }

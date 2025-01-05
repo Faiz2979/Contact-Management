@@ -143,7 +143,69 @@ describe('UserController', () => {
       expect(response.status).toBe(200);
       expect(response.body.data.username).toBe("test");
       expect(response.body.data.name).toBe("test");
+
     });
   });
   
+  describe('PATCH /api/user/current', ()  => {
+
+    beforeEach(async () => {
+      await testService.deleteUser();
+      await testService.registerUser();
+    });
+
+    it(`should be rejected if request is invalid`, async () => {
+      const response = await request(app.getHttpServer())
+        .patch('/api/user/current')
+        .send({ 
+          password: '',
+          name: ''
+        });
+
+      expect(response.status).toBe(401);
+      expect(response.body.message).toBeDefined();
+    });
+
+    it('should be able to update name', async () => {
+      const response = await request(app.getHttpServer())
+        .patch('/api/user/current')
+        .set('Authorization', 'test')
+        .send({ 
+          name: 'test updated'
+        });
+
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.username).toBe("test");
+      expect(response.body.data.name).toBe("test updated");
+    });
+
+    it('should be able update password', async () => {
+      let response = await request(app.getHttpServer())
+        .patch('/api/user/current')
+        .set('Authorization', 'test')
+        .send({
+          password: 'updated',
+        });
+
+      logger.log(response.body);
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.username).toBe('test');
+      expect(response.body.data.name).toBe('test');
+
+      response = await request(app.getHttpServer())
+        .post('/api/user/login')
+        .send({
+          username: 'test',
+          password: 'updated',
+        });
+
+      logger.log(response.body);
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.token).toBeDefined();
+    });
+
+  });
 });

@@ -1,7 +1,7 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Patch, Post } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { Auth } from '../common/auth.decorator';
-import { LoginUserRequest, RegisterUserRequest, UserResponse } from '../model/user.model';
+import { LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserResponse } from '../model/user.model';
 import { WebResponse } from '../model/web.model';
 import { UserService } from './user.service';
 
@@ -43,6 +43,18 @@ export class UserController {
         return {
             data: result
             
+        };
+    }
+
+    @Patch('/current')
+    @HttpCode(200)
+    async updateUser(
+        @Auth() user:User,
+        @Body() request: UpdateUserRequest
+        ): Promise<WebResponse<UserResponse>> {
+        const result = await this.userService.updateUser(user, request);
+        return {
+            data: result
         };
     }
     
