@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Patch, Post } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { Auth } from '../common/auth.decorator';
 import { LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserResponse } from '../model/user.model';
@@ -58,4 +58,12 @@ export class UserController {
         };
     }
     
+    @Delete('/current')
+    @HttpCode(200)
+    async logoutUser(@Auth() user:User): Promise<WebResponse<boolean>> {
+        const result = await this.userService.logoutUser(user);
+        return {
+            data: true
+        };
+    }
 }

@@ -146,6 +146,7 @@ describe('UserController', () => {
 
     });
   });
+
   
   describe('PATCH /api/user/current', ()  => {
 
@@ -207,5 +208,35 @@ describe('UserController', () => {
       expect(response.body.data.token).toBeDefined();
     });
 
+  });
+
+  describe('DELETE /api/user/current', ()  => {
+
+    beforeEach(async () => {
+      await testService.deleteUser();
+      await testService.registerUser();
+    });
+
+    it(`should be rejected if token is invalid`, async () => {
+      const response = await request(app.getHttpServer())
+        .delete('/api/user/current')
+        .set('Authorization', 'salah')
+
+        logger.log('info', response.body);
+
+      expect(response.status).toBe(401);
+      expect(response.body.message).toBeDefined();
+    });
+
+    it('should be able to logout user', async () => {
+      const response = await request(app.getHttpServer())
+        .delete('/api/user/current')
+        .set('Authorization', 'test')
+
+        logger.log('info', response.body);
+
+      expect(response.status).toBe(200);
+      expect(response.body.data).toBe(true);
+    });
   });
 });
