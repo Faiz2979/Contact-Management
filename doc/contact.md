@@ -24,7 +24,7 @@ Response Body (Success)
 ```json
 {
     "data" : {
-        "id" : 1,
+        "id" : 1, // using uuid
         "first_name" : "Eko Kurniawan",
         "last_name" : "Kiko",
         "email" : "eko@example.com",
