@@ -28,4 +28,27 @@ export class TestService{
             }
         });
     }
+
+    async deleteContact(){
+        await this.prisma.contact.deleteMany(
+            {
+                where: {
+                    first_name: {
+                        contains: 'test'
+                    }
+                }
+            }
+        );
+    }
+
+    async login(){
+        await this.prisma.user.create({
+            data: {
+                username: 'test',
+                password: bcrypt.hashSync('test', 10),
+                name: 'test',
+                token: 'test'
+            }
+        });
+    }
 }

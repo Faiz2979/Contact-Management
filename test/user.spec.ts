@@ -7,13 +7,13 @@ import { TestModule } from './test.module';
 import { TestService } from './test.service';
 
 describe('UserController', () => {
-  let app: INestApplication;
-  let logger = Logger;
-  let testService: TestService;
+    let app: INestApplication;
+    let logger = Logger;
+    let testService: TestService;
 
-  beforeEach(async () => {
+    beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, TestModule],
+        imports: [AppModule, TestModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -21,9 +21,9 @@ describe('UserController', () => {
 
     logger = app.get(WINSTON_MODULE_PROVIDER);
     testService = app.get(TestService);
-  });
+    });
 
-  describe('POST /api/user/', ()  => {
+    describe('POST /api/user/', ()  => {
 
     beforeEach(async () => {
       await testService.deleteUser();
@@ -75,9 +75,9 @@ describe('UserController', () => {
       expect(response.status).toBe(400);
       expect(response.body.message).toBeDefined();
     });
-  });
+    });
 
-  describe('POST /api/user/login', ()  => {
+    describe('POST /api/user/login', ()  => {
 
     beforeEach(async () => {
       await testService.deleteUser();
@@ -113,9 +113,9 @@ describe('UserController', () => {
       expect(response.body.data.name).toBe("test");
       expect(response.body.data.token).toBeDefined();
     });
-  });
+    });
 
-  describe('GET /api/user/current', ()  => {
+    describe('GET /api/user/current', ()  => {
 
     beforeEach(async () => {
       await testService.deleteUser();
@@ -145,98 +145,98 @@ describe('UserController', () => {
       expect(response.body.data.name).toBe("test");
 
     });
-  });
+    });
 
-  
-  describe('PATCH /api/user/current', ()  => {
+
+    describe('PATCH /api/user/current', ()  => {
 
     beforeEach(async () => {
-      await testService.deleteUser();
-      await testService.registerUser();
+        await testService.deleteUser();
+        await testService.registerUser();
     });
 
     it(`should be rejected if request is invalid`, async () => {
-      const response = await request(app.getHttpServer())
+        const response = await request(app.getHttpServer())
         .patch('/api/user/current')
         .send({ 
-          password: '',
-          name: ''
+            password: '',
+            name: ''
         });
 
-      expect(response.status).toBe(401);
-      expect(response.body.message).toBeDefined();
+        expect(response.status).toBe(401);
+        expect(response.body.message).toBeDefined();
     });
 
     it('should be able to update name', async () => {
-      const response = await request(app.getHttpServer())
+        const response = await request(app.getHttpServer())
         .patch('/api/user/current')
         .set('Authorization', 'test')
         .send({ 
-          name: 'test updated'
+            name: 'test updated'
         });
 
 
-      expect(response.status).toBe(200);
-      expect(response.body.data.username).toBe("test");
-      expect(response.body.data.name).toBe("test updated");
+        expect(response.status).toBe(200);
+        expect(response.body.data.username).toBe("test");
+        expect(response.body.data.name).toBe("test updated");
     });
 
     it('should be able update password', async () => {
-      let response = await request(app.getHttpServer())
+        let response = await request(app.getHttpServer())
         .patch('/api/user/current')
         .set('Authorization', 'test')
         .send({
-          password: 'updated',
+            password: 'updated',
         });
 
-      logger.log(response.body);
+        logger.log(response.body);
 
-      expect(response.status).toBe(200);
-      expect(response.body.data.username).toBe('test');
-      expect(response.body.data.name).toBe('test');
+        expect(response.status).toBe(200);
+        expect(response.body.data.username).toBe('test');
+        expect(response.body.data.name).toBe('test');
 
-      response = await request(app.getHttpServer())
+        response = await request(app.getHttpServer())
         .post('/api/user/login')
         .send({
-          username: 'test',
-          password: 'updated',
+            username: 'test',
+            password: 'updated',
         });
 
-      logger.log(response.body);
+        logger.log(response.body);
 
-      expect(response.status).toBe(200);
-      expect(response.body.data.token).toBeDefined();
+        expect(response.status).toBe(200);
+        expect(response.body.data.token).toBeDefined();
     });
 
-  });
+    });
 
-  describe('DELETE /api/user/current', ()  => {
+    describe('DELETE /api/user/current', ()  => {
 
     beforeEach(async () => {
-      await testService.deleteUser();
-      await testService.registerUser();
+        await testService.deleteUser();
+        await testService.registerUser();
     });
 
     it(`should be rejected if token is invalid`, async () => {
-      const response = await request(app.getHttpServer())
+        const response = await request(app.getHttpServer())
         .delete('/api/user/current')
         .set('Authorization', 'salah')
 
         logger.log('info', response.body);
 
-      expect(response.status).toBe(401);
-      expect(response.body.message).toBeDefined();
+        expect(response.status).toBe(401);
+        expect(response.body.message).toBeDefined();
     });
 
     it('should be able to logout user', async () => {
-      const response = await request(app.getHttpServer())
+        const response = await request(app.getHttpServer())
         .delete('/api/user/current')
         .set('Authorization', 'test')
 
         logger.log('info', response.body);
 
-      expect(response.status).toBe(200);
-      expect(response.body.data).toBe(true);
+        expect(response.status).toBe(200);
+        expect(response.body.data).toBe(true);
     });
-  });
+    });
 });

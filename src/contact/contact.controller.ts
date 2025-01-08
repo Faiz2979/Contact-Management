@@ -1,8 +1,8 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { Auth } from 'src/common/auth.decorator';
-import { ContactResponse, CreateContactRequest } from 'src/model/contact.model';
-import { WebResponse } from 'src/model/web.model';
+import { Auth } from '../common/auth.decorator';
+import { ContactResponse, CreateContactRequest } from '../model/contact.model';
+import { WebResponse } from '../model/web.model';
 import { ContactService } from './contact.service';
 
 @Controller('/api/contacts')

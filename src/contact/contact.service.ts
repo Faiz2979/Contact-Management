@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Contact, User } from '@prisma/client';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { ValidationService } from 'src/common/validation.service';
 import { PrismaService } from '../common/prisma.servise';
+import { ValidationService } from '../common/validation.service';
 import { ContactResponse, CreateContactRequest } from '../model/contact.model';
 import { ContactValidation } from './contact.validation';
 
