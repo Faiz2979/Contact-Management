@@ -1,9 +1,9 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
 import { Contact, User } from '@prisma/client';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { PrismaService } from '../common/prisma.servise';
+import { PrismaService } from '../common/prisma.service';
 import { ValidationService } from '../common/validation.service';
-import { ContactResponse, CreateContactRequest } from '../model/contact.model';
+import { ContactResponse, CreateContactRequest, UpdateContactRequest } from '../model/contact.model';
 import { ContactValidation } from './contact.validation';
 
 @Injectable()
@@ -39,6 +39,44 @@ export class ContactService {
             phone: contact.phone,
             id: contact.id,
         };
-      }
+    }
+
+    async checkContactMustExists(username: string, contactId: number): Promise<Contact> {
+        const contact = await this.prismaService.contact.findFirst({
+        where: {
+            username: username,
+            id: contactId,
+        },
+        });
     
+        if (!contact) {
+            throw new HttpException('Contact is not found', 404);
+        }
+    
+        return contact;
+    }
+    
+    async getContacts(user: User, contactId: number): Promise<ContactResponse> {
+        const contact = await this.checkContactMustExists(user.username, contactId);
+        return this.toContactResponse(contact);
+    }
+    
+
+    async updateContact(user: User, request: UpdateContactRequest): Promise<ContactResponse> {
+        const updateRequest: UpdateContactRequest = this.validationService.validate(
+            ContactValidation.UPDATE,
+            request,
+        );
+        
+        let contact = await this.checkContactMustExists(user.username, request.id);
+        contact = await this.prismaService.contact.update({
+            where: {
+                id: contact.id,
+                username: contact.username,
+            },
+            data: updateRequest,
+        });
+
+        return this.toContactResponse(contact);
+    }
 }

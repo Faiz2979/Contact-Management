@@ -11,11 +11,6 @@ export class UserController {
     constructor (private userService: UserService){};
 
 
-    @Get('/hello')
-    getHello() {
-        return this.userService.getHello();
-    }
-
     @Post('')
     @HttpCode(200)
     async registerUser(@Body() request:RegisterUserRequest): Promise<WebResponse<UserResponse>> {

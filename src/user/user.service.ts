@@ -3,7 +3,7 @@ import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { v4 as uuid } from 'uuid';
-import { PrismaService } from '../common/prisma.servise';
+import { PrismaService } from '../common/prisma.service';
 import { ValidationService } from '../common/validation.service';
 import { LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserResponse } from '../model/user.model';
 import { UserValidation } from './user.validation';
@@ -16,10 +16,6 @@ export class UserService {
         @Inject(WINSTON_MODULE_PROVIDER) private readonly logger,
         private prismaService: PrismaService,
     ) { }
-
-    getHello(): string {
-        return 'Hello World!';
-    }
 
     async registerUser(request: RegisterUserRequest): Promise<UserResponse> {
         this.logger.info(`Registering user, ${JSON.stringify(request)}`);

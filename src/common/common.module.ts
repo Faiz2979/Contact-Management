@@ -5,7 +5,7 @@ import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { AuthMiddleware } from './auth.middleware';
 import { ErrorFilter } from './error.filter';
-import { PrismaService } from './prisma.servise';
+import { PrismaService } from './prisma.service';
 import { ValidationService } from './validation.service';
 
 @Global()

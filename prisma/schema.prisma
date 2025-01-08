@@ -32,9 +32,8 @@ model Contact {
   phone      String? @db.VarChar(20)
   username   String  @db.VarChar(100)
 
-  user      User      @relation(fields: [username], references: [username])
+  user      User      @relation(fields: [username], references: [username], onDelete: Cascade)
   addresses Address[]
-
   @@map("contacts")
 }
 
@@ -47,7 +46,7 @@ model Address {
   postal_code String  @db.VarChar(10)
   contact_id  Int
 
-  contact Contact @relation(fields: [contact_id], references: [id])
+  contact Contact @relation(fields: [contact_id], references: [id], onDelete: Cascade)
 
   @@map("addresses")
 }
