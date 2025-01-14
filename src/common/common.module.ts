@@ -25,7 +25,7 @@ import { ValidationService } from './validation.service';
     ],
     providers: [PrismaService, ValidationService,{
         provide: APP_FILTER,
-        useValue: ErrorFilter
+        useClass: ErrorFilter
     }],
     exports: [PrismaService,ValidationService],
 })
